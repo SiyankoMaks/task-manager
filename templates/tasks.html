@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10">
+
+    <h2 class="text-2xl font-bold mb-6 text-center">Your Tasks</h2>
+
+    <form action="{{ url_for('tasks.add_task') }}" method="POST" class="flex gap-2 mb-6">
+        <input type="text" name="title" placeholder="New task..." 
+               class="flex-1 p-3 border rounded focus:ring-2 focus:ring-blue-400" required>
+        <button type="submit" 
+                class="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition">
+            Add
+        </button>
+    </form>
+
+    <ul class="space-y-3">
+        {% for task in tasks %}
+            <li class="bg-white p-4 rounded shadow hover:shadow-md transition flex justify-between">
+                <span>{{ task.title }}</span>
+            </li>
+        {% else %}
+            <li class="text-gray-500 text-center">No tasks yet</li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}

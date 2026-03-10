@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded shadow-lg mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
+    <form action="{{ url_for('auth.login') }}" method="POST" class="space-y-4">
+        <input type="text" name="username" placeholder="Username" 
+               class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400" required>
+        <input type="password" name="password" placeholder="Password" 
+               class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400" required>
+        <button type="submit" 
+                class="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition">
+            Login
+        </button>
+    </form>
+
+    <p class="mt-4 text-center text-gray-600">
+        Don't have an account? 
+        <a href="{{ url_for('auth.register') }}" class="text-blue-600 hover:underline">Register</a>
+    </p>
+</div>
+{% endblock %}
