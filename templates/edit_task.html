@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+
+<div class="max-w-md mx-auto bg-white p-6 rounded shadow mt-10">
+
+    <h2 class="text-xl font-bold mb-4 text-center">Edit Task</h2>
+
+    <form method="POST" class="space-y-3">
+
+        <input type="text"
+               name="title"
+               value="{{ task.title }}"
+               class="w-full p-3 border rounded"
+               required>
+
+        <textarea name="description"
+                  class="w-full p-3 border rounded"
+                  placeholder="Description...">{{ task.description }}</textarea>
+
+        <!-- PRIORITY -->
+        <select name="priority" class="w-full p-3 border rounded">
+            <option value="low" {% if task.priority == 'low' %}selected{% endif %}>Low</option>
+            <option value="medium" {% if task.priority == 'medium' %}selected{% endif %}>Medium</option>
+            <option value="high" {% if task.priority == 'high' %}selected{% endif %}>High</option>
+        </select>
+
+        <!-- DEADLINE -->
+        <input type="date"
+               name="deadline"
+               value="{{ task.deadline.strftime('%Y-%m-%d') if task.deadline else '' }}"
+               class="w-full p-3 border rounded">
+
+        <button class="w-full bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-600 transition">
+            Save
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

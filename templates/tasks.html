@@ -6,19 +6,73 @@
 
     <h2 class="text-2xl font-bold mb-6 text-center">Your Tasks</h2>
 
-    <form action="{{ url_for('tasks.add_task') }}" method="POST" class="flex gap-2 mb-6">
-        <input type="text" name="title" placeholder="New task..." 
-               class="flex-1 p-3 border rounded focus:ring-2 focus:ring-blue-400" required>
-        <button type="submit" 
-                class="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition">
-            Add
+    <!-- CREATE TASK -->
+    <form action="{{ url_for('tasks.add_task') }}" method="POST" class="space-y-3 mb-6">
+
+        <input type="text" name="title" placeholder="New task..."
+               class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400" required>
+
+        <textarea name="description" placeholder="Description..."
+                  class="w-full p-3 border rounded"></textarea>
+
+        <div class="flex gap-2">
+            <select name="priority" class="p-3 border rounded w-1/2">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+
+            <input type="date" name="deadline"
+                   class="p-3 border rounded w-1/2">
+        </div>
+
+        <button type="submit"
+                class="w-full bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+            Add Task
         </button>
     </form>
 
+    <!-- TASK LIST -->
     <ul class="space-y-3">
         {% for task in tasks %}
-            <li class="bg-white p-4 rounded shadow hover:shadow-md transition flex justify-between">
-                <span>{{ task.title }}</span>
+            <li class="bg-white p-4 rounded shadow flex justify-between items-center">
+
+                <div>
+                    <p class="font-bold text-lg">{{ task.title }}</p>
+
+                    {% if task.description %}
+                        <p class="text-sm text-gray-600">{{ task.description }}</p>
+                    {% endif %}
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Priority: {{ task.priority }} |
+                        Status: {{ task.status }}
+                        {% if task.deadline %}
+                            | Deadline: {{ task.deadline.strftime('%Y-%m-%d') }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="flex gap-2 items-center">
+
+                    <!-- DONE -->
+                    {% if task.status != 'done' %}
+                        <a href="{{ url_for('tasks.mark_done', id=task.id) }}"
+                           class="text-green-500 font-bold">✔</a>
+                    {% endif %}
+
+                    <!-- EDIT -->
+                    <a href="{{ url_for('tasks.edit_task', id=task.id) }}"
+                       class="text-blue-500">Edit</a>
+
+                    <!-- DELETE (POST) -->
+                    <form method="POST"
+                          action="{{ url_for('tasks.delete_task', id=task.id) }}">
+                        <button class="text-red-500">Delete</button>
+                    </form>
+
+                </div>
+
             </li>
         {% else %}
             <li class="text-gray-500 text-center">No tasks yet</li>
