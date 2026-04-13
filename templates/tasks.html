@@ -6,6 +6,54 @@
 
     <h2 class="text-2xl font-bold mb-6 text-center">Your Tasks</h2>
 
+    <form method="GET" class="mb-6 space-y-3">
+
+        <!-- SEARCH -->
+        <input type="text" name="search" placeholder="Search..."
+            value="{{ request.args.get('search', '') }}"
+            class="w-full p-3 border rounded">
+
+        <div class="flex gap-2">
+
+            <!-- STATUS -->
+            <select name="status" class="p-3 border rounded w-1/3">
+                <option value="">All statuses</option>
+                <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="done" {% if request.args.get('status') == 'done' %}selected{% endif %}>Done</option>
+            </select>
+
+            <!-- PRIORITY -->
+            <select name="priority" class="p-3 border rounded w-1/3">
+                <option value="">All priorities</option>
+                <option value="low" {% if request.args.get('priority') == 'low' %}selected{% endif %}>Low</option>
+                <option value="medium" {% if request.args.get('priority') == 'medium' %}selected{% endif %}>Medium</option>
+                <option value="high" {% if request.args.get('priority') == 'high' %}selected{% endif %}>High</option>
+            </select>
+
+            <!-- SORT -->
+            <select name="sort" class="p-3 border rounded w-1/3">
+                <option value="">Sort by</option>
+                <option value="deadline" {% if request.args.get('sort') == 'deadline' %}selected{% endif %}>Deadline</option>
+                <option value="created" {% if request.args.get('sort') == 'created' %}selected{% endif %}>Created</option>
+            </select>
+
+            <select name="order" class="p-3 border rounded w-1/3">
+                <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Asc</option>
+                <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Desc</option>
+            </select>
+
+        </div>
+
+        <button class="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
+            Apply Filters
+        </button>
+
+    </form>
+
+    <a href="{{ url_for('tasks.tasks_page') }}" class="block text-center text-gray-500 hover:underline mb-4">
+        Reset filters
+    </a>
+
     <!-- CREATE TASK -->
     <form action="{{ url_for('tasks.add_task') }}" method="POST" class="space-y-3 mb-6">
 
@@ -34,7 +82,7 @@
 
     <!-- TASK LIST -->
     <ul class="space-y-3">
-        {% for task in tasks %}
+        {% for task in tasks.items %}
             <li class="bg-white p-4 rounded shadow flex justify-between items-center">
 
                 <div>
@@ -78,6 +126,22 @@
             <li class="text-gray-500 text-center">No tasks yet</li>
         {% endfor %}
     </ul>
+
+    <div class="flex justify-center mt-6 gap-2">
+        {% if tasks.has_prev %}
+            <a href="{{ url_for('tasks.tasks_page', page=tasks.prev_num, **args) }}"
+            class="px-3 py-1 bg-gray-200 rounded">Prev</a>
+        {% endif %}
+
+        <span class="px-3 py-1">
+            Page {{ tasks.page }} of {{ tasks.pages }}
+        </span>
+
+        {% if tasks.has_next %}
+            <a href="{{ url_for('tasks.tasks_page', page=tasks.next_num, **args) }}"
+            class="px-3 py-1 bg-gray-200 rounded">Next</a>
+        {% endif %}
+    </div>
 
 </div>
 {% endblock %}
